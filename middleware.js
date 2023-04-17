@@ -52,15 +52,20 @@ const isSeller = (req,res,next)=>{
 
 const isProductAuthor = async(req,res,next)=>{
 //to get the id of thatparticular product
-    let {id} = req.params;
-    const product = await Product.findById(id);
-    console.log(product.author);
-    console.log(req.user);
-    if(!product.author.equals(req.user._id)){
-        req.flash('error' , 'you donot have the permission to do that');
-        return res.redirect(`/products/${id}`);
+    try {
+        let {id} = req.params;
+        const product = await Product.findById(id);
+        console.log(product.author);
+        console.log(req.user);
+        if(!product.author.equals(req.user._id)){
+            req.flash('error' , 'you donot have the permission to do that');
+            return res.redirect(`/products/${id}`);
+        }
+        next();
+        
+    } catch (error) {
+        console.log(error);
     }
-    next();
 }
 
 
